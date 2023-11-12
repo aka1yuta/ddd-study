@@ -2,9 +2,12 @@ package com.nhn.cloud.ddd.catalog.domain.product;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Convert;
+import javax.persistence.ElementCollection;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,6 +16,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
+import com.nhn.cloud.ddd.catalog.domain.category.CategoryId;
 import com.nhn.cloud.ddd.common.domain.Money;
 import com.nhn.cloud.ddd.common.jpa.MoneyConverter;
 
@@ -21,6 +25,11 @@ import com.nhn.cloud.ddd.common.jpa.MoneyConverter;
 public class Product {
     @EmbeddedId
     private ProductId id;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "product_category",
+        joinColumns = @JoinColumn(name = "product_id"))
+    private Set<CategoryId> categoryIds;
 
     @Convert(converter = MoneyConverter.class)
     private Money price;
